@@ -291,14 +291,22 @@ class PromptFormatter {
             if (!text) {
                 return {
                     from: 'en',
-                    to: 'zh'
+                    to: 'ko'
                 };
             }
 
+            // 检查是否包含韩文字符
+            const hasKoreanChars = /[\uac00-\ud7a3]/.test(text);
             // 检查是否包含中文字符
             const hasChineseChars = /[\u4e00-\u9fff]/.test(text);
             // 检查是否包含英文字符
             const hasEnglishChars = /[a-zA-Z]/.test(text);
+
+            // 韩文优先：含有韩文时一律翻译成英文，英文标签和权重语法按原样保留
+            if (hasKoreanChars) {
+                logger.debug(`语言检测 | 结果:韩文 | 翻译方向:ko→en`);
+                return { from: 'ko', to: 'en' };
+            }
 
             let from, to, type;
 
@@ -310,7 +318,7 @@ class PromptFormatter {
             } else if (!hasChineseChars && hasEnglishChars) {
                 // 纯英文
                 from = 'en';
-                to = 'zh';
+                to = 'ko';
                 type = '纯英文';
             } else {
                 // 混合语言：按中文汉字数量 vs 英文单词数量比较以决定方向
@@ -380,7 +388,7 @@ class PromptFormatter {
             logger.error(`语言检测 | 结果:异常 | 错误:${error.message}`);
             return {
                 from: 'en',
-                to: 'zh'
+                to: 'ko'
             };
         }
     }

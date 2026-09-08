@@ -1,3 +1,22 @@
+> ## 한국어 사용을 위한 fork
+>
+> 원본: [yawiii/ComfyUI-Prompt-Assistant](https://github.com/yawiii/ComfyUI-Prompt-Assistant)
+>
+> 원본은 번역 버튼이 중국어와 영어 사이에서만 동작합니다. 이 fork는 번역 방향을 한국어 기준으로 바꿉니다.
+>
+> - 한글이 포함된 텍스트는 **한국어 → 영어**로 번역합니다. 영어만 있는 텍스트는 한국어로 번역합니다.
+> - 영어 태그, LoRA 이름, `(word:1.2)` 같은 가중치 문법은 원본 규칙 그대로 보존됩니다.
+> - 수정한 곳은 `js/utils/promptFormatter.js`의 `detectLanguage` 하나뿐입니다. 백엔드는 원래부터 한국어를 지원해서 손대지 않았습니다.
+>
+> 번역 서비스는 LLM을 쓰세요. Baidu는 중국어 중심이라 한국어에 맞지 않습니다. 로컬 Ollama도 쓸 수 있습니다(`base_url`에 `/v1`을 붙이면 OpenAI 호환, 안 붙이면 네이티브 API).
+>
+> 원본 업데이트를 가져오려면:
+>
+> ```bash
+> git fetch upstream && git merge upstream/main
+> ```
+>
+> 아래는 원본 문서입니다.
 
 <div align="center">
 
