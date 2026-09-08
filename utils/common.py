@@ -570,33 +570,33 @@ class ProgressBar:
 
 # HTTP状态码到中文错误信息的映射
 HTTP_STATUS_CODE_MESSAGES = {
-    400: "请求无效",
-    401: "身份验证失败-请检查您的API Key是否正确。",
-    403: "无权限访问-您没有权限访问此资源。",
-    404: "请求的资源不存在",
-    429: "请求频率过高-您已超出速率限制，请稍后再试。",
-    500: "服务器内部错误- 服务提供商端发生未知问题。",
-    502: "网关错误",
-    503: "服务不可用- 服务器当前无法处理请求，请稍后重试。",
-    504: "网关超时",
+    400: "잘못된 요청",
+    401: "인증 실패 - API Key가 올바른지 확인하세요.",
+    403: "접근 권한 없음 - 이 리소스에 접근할 권한이 없습니다.",
+    404: "요청한 리소스가 존재하지 않습니다",
+    429: "요청이 너무 잦습니다 - 속도 제한을 초과했습니다. 잠시 후 다시 시도하세요.",
+    500: "서버 내부 오류 - 서비스 제공자 쪽에서 알 수 없는 문제가 발생했습니다.",
+    502: "게이트웨이 오류",
+    503: "서비스를 사용할 수 없음 - 서버가 현재 요청을 처리할 수 없습니다. 잠시 후 다시 시도하세요.",
+    504: "게이트웨이 시간 초과",
 }
 
 # 百度翻译API的错误码映射
 BAIDU_ERROR_CODE_MESSAGES = {
-    '52001': '请求超时，请重试',
-    '52002': '系统错误，请重试',
-    '52003': '未授权用户，请检查appid是否正确或服务是否开通',
-    '54000': '必填参数为空，请检查是否少传参数',
-    '54001': '签名错误，请检查appid和secret_key是否正确',
-    '54003': '访问频率受限，请降低您的调用频率，或进行身份认证后切换为高级版/尊享版',
-    '54004': '账户余额不足，请前往管理控制台充值',
-    '54005': '长query请求频繁，请降低长query的发送频率，3s后再试',
-    '58000': '客户端IP非法，检查个人资料里填写的IP地址是否正确，可前往开发者信息-基本信息修改',
-    '58001': '译文语言方向不支持，检查译文语言是否在语言列表里',
-    '58002': '服务当前已关闭，请前往百度管理控制台开启服务',
-    '58003': '此IP已被封禁',
-    '90107': '认证未通过或未生效，请前往我的认证查看认证进度',
-    '20003': '请求内容存在安全风险',
+    '52001': '요청 시간이 초과되었습니다. 다시 시도하세요',
+    '52002': '시스템 오류입니다. 다시 시도하세요',
+    '52003': '인증되지 않은 사용자입니다. appid가 맞는지, 서비스가 개통되었는지 확인하세요',
+    '54000': '필수 매개변수가 비어 있습니다. 빠진 값이 없는지 확인하세요',
+    '54001': '서명 오류입니다. appid와 secret_key가 맞는지 확인하세요',
+    '54003': '호출 빈도 제한입니다. 호출 속도를 낮추거나 인증 후 상위 요금제로 전환하세요',
+    '54004': '계정 잔액이 부족합니다. 관리 콘솔에서 충전하세요',
+    '54005': '긴 query 요청이 잦습니다. 전송 빈도를 낮추고 3초 후 다시 시도하세요',
+    '58000': '클라이언트 IP가 유효하지 않습니다. 개발자 정보에 등록한 IP 주소를 확인하세요',
+    '58001': '지원하지 않는 번역 언어 방향입니다. 대상 언어가 목록에 있는지 확인하세요',
+    '58002': '서비스가 꺼져 있습니다. Baidu 관리 콘솔에서 서비스를 켜세요',
+    '58003': '이 IP는 차단되었습니다',
+    '90107': '인증이 통과되지 않았거나 아직 반영되지 않았습니다. 인증 진행 상태를 확인하세요',
+    '20003': '요청 내용에 보안 위험이 있습니다',
 }
 
 
@@ -643,14 +643,14 @@ def format_api_error(e: Exception, provider_display_name: str) -> str:
     """
     # 处理编码异常
     if isinstance(e, UnicodeEncodeError):
-        return f"{provider_display_name} 网络请求编码异常: 检测到非法字符 (\u2026 或其他非 ASCII 字符)。请检查服务商配置中的 API Key 或 URL 是否包含多余的省略号、引号或空格。"
+        return f"{provider_display_name} 요청 인코딩 오류: 잘못된 문자(\u2026 등 비 ASCII 문자)가 있습니다. 서비스 설정의 API Key나 URL에 불필요한 말줄임표, 따옴표, 공백이 들어갔는지 확인하세요."
 
     # 处理httpx的HTTP错误
     try:
         import httpx
         if isinstance(e, httpx.HTTPStatusError):
             status_code = e.response.status_code
-            message = HTTP_STATUS_CODE_MESSAGES.get(status_code, "未知HTTP错误")
+            message = HTTP_STATUS_CODE_MESSAGES.get(status_code, "알 수 없는 HTTP 오류")
             
             error_details_str = ""
             detail_msg = ""
@@ -662,26 +662,26 @@ def format_api_error(e: Exception, provider_display_name: str) -> str:
                     detail_msg = error_details["error"].get("message", detail_msg)
                 
                 if detail_msg:
-                    error_details_str = f" | 详情: {detail_msg}"
+                    error_details_str = f" | 상세: {detail_msg}"
             except (json.JSONDecodeError, AttributeError):
                 try:
                     if hasattr(e.response, 'text') and e.response.text:
                         detail_msg = e.response.text[:200]
-                        error_details_str = f" | 原始响应: {detail_msg}"
+                        error_details_str = f" | 원본 응답: {detail_msg}"
                 except Exception:
                     pass
             
             # ---智能识别认证错误并提供友好提示---
             combined_error_text = f"{message} {detail_msg}".lower()
             if status_code == 401 or _is_auth_error(combined_error_text):
-                return f"{provider_display_name} 认证失败: 未配置API Key或API Key无效，请在服务商配置中填写正确的API Key"
+                return f"{provider_display_name} 인증 실패: API Key가 설정되지 않았거나 유효하지 않습니다. API 관리자에서 올바른 API Key를 입력하세요"
                     
-            return f"{provider_display_name} API错误: {message} (状态码: {status_code}){error_details_str}"
+            return f"{provider_display_name} API 오류: {message} (상태 코드: {status_code}){error_details_str}"
     except Exception:
         pass
         
     # 对于其他类型的异常，返回其类型和基本信息
-    return f"{provider_display_name} 服务请求异常: ({type(e).__name__}) {str(e)}"
+    return f"{provider_display_name} 요청 오류: ({type(e).__name__}) {str(e)}"
 
 
 def format_baidu_translate_error(error_data: dict) -> str:
@@ -695,14 +695,14 @@ def format_baidu_translate_error(error_data: dict) -> str:
         str: 格式化后的错误信息
     """
     if not isinstance(error_data, dict):
-        return "未知的百度翻译错误格式"
+        return "알 수 없는 Baidu 번역 오류 형식입니다"
         
     error_code = str(error_data.get('error_code'))
     if error_code in BAIDU_ERROR_CODE_MESSAGES:
-        return f"百度翻译错误: {BAIDU_ERROR_CODE_MESSAGES[error_code]} (代码: {error_code})"
+        return f"Baidu 번역 오류: {BAIDU_ERROR_CODE_MESSAGES[error_code]} (코드: {error_code})"
     
-    error_msg = error_data.get('error_msg', '未知错误')
-    return f"百度翻译错误: {error_msg} (代码: {error_code})"
+    error_msg = error_data.get('error_msg', '알 수 없는 오류')
+    return f"Baidu 번역 오류: {error_msg} (코드: {error_code})"
 
 
 # ---图像处理函数---
