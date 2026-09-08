@@ -59,7 +59,7 @@ class ConfigManager:
         
         # ---简单默认配置（无需模板，直接定义）---
         self.default_active_prompts = {
-            "expand": "expand_扩写-通用",
+            "expand": "expand_한국어-영어",
             "vision_zh": "vision_zh_图像描述-Tag风格",
             "vision_en": "vision_en_Detail_Caption"
         }
