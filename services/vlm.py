@@ -33,7 +33,7 @@ class VisionService(OpenAICompatibleService):
 
         if 'providers' in config and current_provider in config['providers']:
             provider_config = config['providers'][current_provider]
-            return {
+            result = {
                 'provider': current_provider,
                 'model': provider_config.get('model', ''),
                 'base_url': provider_config.get('base_url', ''),
@@ -44,7 +44,10 @@ class VisionService(OpenAICompatibleService):
                 'auto_unload': provider_config.get('auto_unload', True)
             }
         else:
-            return config
+            result = dict(config)
+        from .ollama_discover import apply_if_ollama
+        result['base_url'] = apply_if_ollama(current_provider, result.get('base_url', ''))
+        return result
     
     @staticmethod
     async def _call_ollama_native_vision(

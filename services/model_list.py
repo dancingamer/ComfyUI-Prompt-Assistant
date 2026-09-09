@@ -82,6 +82,8 @@ def get_models_from_service(base_url: str, api_key: str, service_type: str) -> D
         
         # 根据服务类型调用不同的获取方法
         if service_type == 'ollama':
+            from .ollama_discover import resolve_configured
+            base_url = resolve_configured(base_url) or base_url
             return _fetch_ollama_models(base_url)
         else:  # openai_compatible
             return _fetch_openai_compatible_models(base_url, api_key)

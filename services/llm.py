@@ -32,7 +32,7 @@ class LLMService(OpenAICompatibleService):
 
         if 'providers' in config and current_provider in config['providers']:
             provider_config = config['providers'][current_provider]
-            return {
+            result = {
                 'provider': current_provider,
                 'model': provider_config.get('model', ''),
                 'base_url': provider_config.get('base_url', ''),
@@ -43,7 +43,10 @@ class LLMService(OpenAICompatibleService):
                 'auto_unload': provider_config.get('auto_unload', True)
             }
         else:
-            return config
+            result = dict(config)
+        from .ollama_discover import apply_if_ollama
+        result['base_url'] = apply_if_ollama(current_provider, result.get('base_url', ''))
+        return result
     
     @staticmethod
     def _is_chinese(text: str) -> bool:
@@ -85,7 +88,8 @@ class LLMService(OpenAICompatibleService):
             _thinking_tag = "（已关闭思维链）" if _thinking_extra else ""
             
             # 计算基准 URL (确保移除 /v1 和末尾斜杠)
-            native_base = base_url.rstrip('/') if base_url else 'http://localhost:11434'
+            from .ollama_discover import resolve_configured
+            native_base = (resolve_configured(base_url) or base_url or 'http://localhost:11434').rstrip('/')
             if native_base.endswith('/v1'):
                 native_base = native_base[:-3].rstrip('/')
             
@@ -265,6 +269,9 @@ class LLMService(OpenAICompatibleService):
                 top_p = config.get('top_p', 0.9)
                 max_tokens = config.get('max_tokens', 2000)
                 base_url = config.get('base_url', '')
+
+            from .ollama_discover import apply_if_ollama
+            base_url = apply_if_ollama(provider, base_url)
 
             # 注：允许空API Key，支持无认证服务商（如deepinfra公开端点）
             if not model:
@@ -486,6 +493,9 @@ class LLMService(OpenAICompatibleService):
                 top_p = config.get('top_p', 0.9)
                 max_tokens = config.get('max_tokens', 2000)
                 base_url = config.get('base_url', '')
+
+            from .ollama_discover import apply_if_ollama
+            base_url = apply_if_ollama(provider, base_url)
 
             # 注：允许空API Key，支持无认证服务商
             if not model:
