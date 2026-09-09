@@ -121,7 +121,7 @@ def _candidates(hint=""):
 def discover(hint=""):
     now = time.monotonic()
     cached = _cache["url"]
-    if cached and now < _cache["until"] and _alive(cached):
+    if cached and now < _cache["until"]:
         return cached
 
     for base in _candidates(hint):
